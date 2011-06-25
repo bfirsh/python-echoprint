@@ -33,20 +33,13 @@ static PyObject * echoprint_codegen(PyObject *self, PyObject *args) {
         Py_DECREF(item);
     }
     pCodegen = new Codegen(samples, num_samples, start_offset);
-    result = PyDict_New();
-    PyDict_SetItem(
-        result, 
-        PyUnicode_FromString("code"), 
-        PyUnicode_FromString(pCodegen->getCodeString().c_str())
-    );
     version_string << pCodegen->getVersion();
-    PyDict_SetItem(
-        result,
-        PyUnicode_FromString("version"), 
-        PyUnicode_FromString(version_string.str().c_str())
+    result = Py_BuildValue("{s:s,s:s}",
+        "code", pCodegen->getCodeString().c_str(),
+        "version", version_string.str().c_str()
     );
-    delete[] samples;
     delete pCodegen;
+    delete[] samples;
     return result;
 }
 
