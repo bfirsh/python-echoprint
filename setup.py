@@ -15,7 +15,7 @@ echoprint_ext = Extension(
         'libcodegen/Whitening.cxx',
         'echoprint.cpp',
     ],
-    include_dirs=['libcodegen'],
+    include_dirs=['/usr/include/taglib', 'libcodegen'],
     libraries=['tag', 'z', 'pthread'],
 )
 
