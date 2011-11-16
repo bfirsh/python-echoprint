@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import echoprint
-import requests
+import urllib
 import subprocess
 import sys
 import struct
@@ -34,7 +34,7 @@ while True:
 d = echoprint.codegen(samples)
 
 d['api_key'] = api_key
-res = requests.get('http://developer.echonest.com/api/v4/song/identify', d)
+res = urllib.urlopen('http://developer.echonest.com/api/v4/song/identify?' + urllib.urlencode(d)).read()
 
-print res.content
+print res
 
