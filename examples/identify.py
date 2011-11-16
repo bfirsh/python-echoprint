@@ -5,12 +5,14 @@ import subprocess
 import sys
 import struct
 
-if len(sys.argv) < 2:
-    print "Usage: identify.py api_key filename"
+if len(sys.argv) < 4:
+    print "Usage: identify.py api_key filename start end"
     sys.exit(1)
 
 api_key = sys.argv[1]
 filename = sys.argv[2]
+start = sys.argv[3]
+end = sys.argv[4]
 
 p = subprocess.Popen([
     'ffmpeg',
@@ -31,7 +33,7 @@ while True:
         break
     samples.append(struct.unpack('h', sample)[0] / 32768.0)
 
-d = echoprint.codegen(samples)
+d = echoprint.codegen(samples, int(start))
 
 d['api_key'] = api_key
 res = urllib.urlopen('http://developer.echonest.com/api/v4/song/identify?' + urllib.urlencode(d)).read()
