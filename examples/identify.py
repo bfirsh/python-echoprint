@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 import echoprint
-import urllib
+import requests
 import subprocess
 import sys
 import struct
+import os
+import json
 
 if len(sys.argv) < 4:
     print "Usage: identify.py api_key filename start duration"
@@ -35,8 +37,15 @@ while True:
 
 d = echoprint.codegen(samples, int(start))
 
-d['api_key'] = api_key
-res = urllib.urlopen('http://developer.echonest.com/api/v4/song/identify?' + urllib.urlencode(d)).read()
+if os.environ.has_key('HTTP_PROXY'):
+    proxy = os.environ['HTTP_PROXY']
+else:
+    proxy = None
 
-print res
-
+r = requests.post(
+    'http://developer.echonest.com/api/v4/song/identify', 
+    data={'query': json.dumps(d), 'api_key': api_key, 'version': d['version']}, 
+    headers={'content-type': 'application/x-www-form-urlencoded'}, 
+    proxies={'http': proxy}
+)
+print r.content
