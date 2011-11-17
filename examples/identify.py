@@ -34,7 +34,6 @@ while True:
     samples.append(struct.unpack('h', sample)[0] / 32768.0)
 
 d = echoprint.codegen(samples, int(start))
-print d['code']
 
 d['api_key'] = api_key
 res = urllib.urlopen('http://developer.echonest.com/api/v4/song/identify?' + urllib.urlencode(d)).read()
