@@ -11,7 +11,6 @@ static PyObject * echoprint_codegen(PyObject *self, PyObject *args) {
     uint i;
     Codegen *pCodegen;
     PyObject *result;
-    std::ostringstream version_string;
     
     if (!PyArg_ParseTuple(args, "O|i", &py_samples, &start_offset)) {
         return NULL;
@@ -22,6 +21,7 @@ static PyObject * echoprint_codegen(PyObject *self, PyObject *args) {
     }
     num_samples = PySequence_Size(py_samples);
     samples = new float[num_samples];
+
     for (i = 0; i < num_samples; i++) {
         item = PySequence_GetItem(py_samples, i);
         if (!PyFloat_Check(item)) {
@@ -33,10 +33,9 @@ static PyObject * echoprint_codegen(PyObject *self, PyObject *args) {
         Py_DECREF(item);
     }
     pCodegen = new Codegen(samples, num_samples, start_offset);
-    version_string << pCodegen->getVersion();
-    result = Py_BuildValue("{s:s,s:s}",
+    result = Py_BuildValue("{s:s,s:f}",
         "code", pCodegen->getCodeString().c_str(),
-        "version", version_string.str().c_str()
+        "version", pCodegen->getVersion()
     );
     delete pCodegen;
     delete[] samples;
