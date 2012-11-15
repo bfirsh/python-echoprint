@@ -7,13 +7,17 @@
 #include "SubbandAnalysis.h"
 #include "AudioStreamInput.h"
 
+#ifdef _WIN32
+#include "win_funcs.h"
+#endif
+
 SubbandAnalysis::SubbandAnalysis(AudioStreamInput* pAudio) {
     _pSamples = pAudio->getSamples();
     _NumSamples = pAudio->getNumSamples();
     Init();
 }
 
-SubbandAnalysis::SubbandAnalysis(const float* pSamples, uint numSamples) : 
+SubbandAnalysis::SubbandAnalysis(const float* pSamples, uint numSamples) :
     _pSamples(pSamples), _NumSamples(numSamples) {
     Init();
 }
@@ -28,17 +32,17 @@ void SubbandAnalysis::Init() {
     for (uint i = 0; i < M_ROWS; ++i) {
         for (uint k = 0; k < M_COLS; ++k) {
             _Mr(i,k) = cos((2*i + 1)*(k-4)*(M_PI/16.0));
-    		_Mi(i,k) = sin((2*i + 1)*(k-4)*(M_PI/16.0));
+            _Mi(i,k) = sin((2*i + 1)*(k-4)*(M_PI/16.0));
         }
     }
 }
 
 void SubbandAnalysis::Compute() {
     uint t, i, j;
-    
+
     float Z[C_LEN];
     float Y[M_COLS];
-    
+
     _NumFrames = (_NumSamples - C_LEN + 1)/SUBBANDS;
     assert(_NumFrames > 0);
 
@@ -55,7 +59,7 @@ void SubbandAnalysis::Compute() {
         for (i = 0; i < M_COLS; ++i) {
             for (j = 1; j < M_ROWS; ++j) {
                 Y[i] += Z[i + M_COLS*j];
-    	    }
+            }
         }
         for (i = 0; i < M_ROWS; ++i) {
             float Dr = 0, Di = 0;
