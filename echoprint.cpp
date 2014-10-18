@@ -2,6 +2,10 @@
 #include <Python.h>
 #include <stdio.h>
 
+#ifndef uint
+define uint unsigned int
+#endif
+
 static PyObject * echoprint_codegen(PyObject *self, PyObject *args) {
     PyObject *py_samples;
     int start_offset = 0;

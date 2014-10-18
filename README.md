@@ -21,6 +21,10 @@ Then as root or in a virtualenv:
 
     python setup.py install
 
+On OS X, you may need to add the taglib header folder into the include path, similar to the following example:
+
+    CPATH=:/usr/local/Cellar/taglib/1.9.1/include/taglib python setup.py install
+
 Usage
 -----
 
